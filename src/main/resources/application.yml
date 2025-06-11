@@ -5,10 +5,11 @@ spring:
     init:
       mode: never
   datasource:
-    url: jdbc:h2:mem:testdb;AUTO_SERVER=true;IF_EXISTS=false
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: admin
+    datasource:
+      url: jdbc:h2:mem:testdb
+      username: sa
+      password: password
+      driverClassName: org.h2.Driver
   h2:
     console:
       enabled: true
