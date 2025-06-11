@@ -52,7 +52,7 @@ public class UserRepository {
     }
 
     public String deleteUser(Long id) {
-        List<UserDTO> deleted = users.stream().filter(user -> user.getId().equals(id)).collect(Collectors.toList());
-        return deleted.size() > 0 ? "Usuário com id "+id+" deletado" : "Não foram encontrados registros";
+        boolean removed =  users.removeIf(user -> user.getId().equals(id));
+        return removed ? "Usuário com id "+id+" deletado" : "Não foram encontrados registros";
     }
 }
