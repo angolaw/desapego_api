@@ -5,7 +5,9 @@ import org.apache.catalina.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserRepository {
@@ -47,5 +49,10 @@ public class UserRepository {
             }
         }
         return null;
+    }
+
+    public String deleteUser(Long id) {
+        List<UserDTO> deleted = users.stream().filter(user -> user.getId().equals(id)).collect(Collectors.toList());
+        return deleted.size() > 0 ? "Usuário com id "+id+" deletado" : "Não foram encontrados registros";
     }
 }

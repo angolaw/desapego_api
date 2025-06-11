@@ -31,4 +31,9 @@ public class UserService{
         UserDTO updatedUser = userRepository.updateUser(newData);
         return updatedUser;
     }
+
+    public String deleteUser(Long id) {
+        String response = userRepository.deleteUser(id);
+        return response;
+    }
 }
