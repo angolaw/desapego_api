@@ -1,42 +1,40 @@
 package com.desapego.api.services;
 
+import com.desapego.api.dtos.Either;
 import com.desapego.api.dtos.UserDTO;
 import com.desapego.api.repositories.UserRepository;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class UserService{
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<UserDTO> createUser(UserDTO userDTO) {
-
+    public Either<String, UserDTO> createUser(UserDTO userDTO) {
+        if(getUserByEmail(userDTO.getEmail()) != null){
+           return Either.left("An error has ocurred!");
+        }
         UserDTO createdUser = userRepository.save(userDTO);
-        return Optional.ofNullable(UserDTO.builder().email(createdUser.getEmail()).name(createdUser.getName()).telephoneNumber(createdUser.getTelephoneNumber()).build());
+        return Either.right(createdUser);
     }
 
-    public ArrayList<UserDTO> fetchAll() {
+    public List<UserDTO> fetchAll() {
         return userRepository.findAll();
 
     }
 
     public UserDTO getUserByEmail(String email) {
-        UserDTO retrievedUser = userRepository.getUserByEmail(email);
-        return retrievedUser;
+        return userRepository.getUserByEmail(email);
     }
 
     public UserDTO updateUser(UserDTO newData) {
-        UserDTO updatedUser = userRepository.updateUser(newData);
-        return updatedUser;
+        return userRepository.updateUser(newData);
     }
 
     public String deleteUser(Long id) {
-        String response = userRepository.deleteUser(id);
-        return response;
+        return userRepository.deleteUser(id);
     }
 }

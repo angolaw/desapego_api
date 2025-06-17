@@ -1,31 +1,32 @@
 package com.desapego.api.repositories;
 
 import com.desapego.api.dtos.UserDTO;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Repository
 public class UserRepository {
-    private ArrayList<UserDTO> users = new ArrayList<>();
+    private final List<UserDTO> users = new ArrayList<>();
+    Random randomGenerator = new Random();
+    Long randomLongValue = null;
+    public void initializeRamdomness(){
+        randomLongValue = randomGenerator.nextLong();
+    }
 
 
     public UserDTO save(UserDTO userDTO) {
+        initializeRamdomness();
 
-        Random randomGenerator = new Random();
-
-        Long randomLongValue = randomGenerator.nextLong();
         userDTO.setId(randomLongValue);
         users.add(userDTO);
         return userDTO;
     }
 
-    public ArrayList<UserDTO> findAll() {
+    public List<UserDTO> findAll() {
         return users;
     }
 
@@ -40,7 +41,7 @@ public class UserRepository {
 
     public UserDTO updateUser(UserDTO newData) {
         for (int i= 0; i < users.size(); i++){
-            if(users.get(i).getEmail().equals(newData.getEmail())){
+            if(users.get(i).getId().equals(newData.getId())){
                 UserDTO userToUpdate = users.get(i);
                 userToUpdate.setName(newData.getName());
                 userToUpdate.setEmail(newData.getEmail());
@@ -57,11 +58,4 @@ public class UserRepository {
         return removed ? "Usuário com id "+id+" deletado" : "Não foram encontrados registros";
     }
 
-    public boolean findByEmail(String email){
-        Optional<UserDTO> hasEmailAlreadyInUse =
-                Optional.ofNullable(users.stream().filter(user -> user.getEmail().equals(email)).findFirst().orElse(null));
-        return hasEmailAlreadyInUse.isEmpty();
-
-
-    }
 }

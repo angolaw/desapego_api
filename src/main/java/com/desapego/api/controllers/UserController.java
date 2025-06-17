@@ -1,5 +1,6 @@
 package com.desapego.api.controllers;
 
+import com.desapego.api.dtos.Either;
 import com.desapego.api.dtos.UserDTO;
 import com.desapego.api.services.UserService;
 import jakarta.validation.Valid;
@@ -8,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -18,16 +18,16 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO){
-        Optional<UserDTO> createdUser = userService.createUser(userDTO);
-        if(createdUser.isEmpty()){
-            return ResponseEntity.ofNullable(createdUser.get());
+    public ResponseEntity<Either<String, UserDTO>> createUser(@Valid @RequestBody UserDTO userDTO){
+        Either<String, UserDTO> createdUser = userService.createUser(userDTO);
+        if(createdUser.getLeft() != null){
+            return ResponseEntity.status(404).body(createdUser);
         }
-        return ResponseEntity.accepted().body(createdUser.get());
+        return ResponseEntity.accepted().body(createdUser);
     }
     @GetMapping("/fetch")
-    public ResponseEntity<ArrayList<UserDTO>> getUsers(){
-        ArrayList<UserDTO> allUsers = userService.fetchAll();
+    public ResponseEntity<List<UserDTO>> getUsers(){
+        List<UserDTO> allUsers = userService.fetchAll();
         return ResponseEntity.ok(allUsers);
     }
     @GetMapping("/getUserByEmail")
