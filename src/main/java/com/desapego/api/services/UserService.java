@@ -7,19 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class UserService{
     @Autowired
     private UserRepository userRepository;
 
-    public UserDTO createUser(UserDTO userDTO) {
+    public Optional<UserDTO> createUser(UserDTO userDTO) {
+
         UserDTO createdUser = userRepository.save(userDTO);
-        return createdUser;
+        return Optional.ofNullable(UserDTO.builder().email(createdUser.getEmail()).name(createdUser.getName()).telephoneNumber(createdUser.getTelephoneNumber()).build());
     }
 
     public ArrayList<UserDTO> fetchAll() {
         return userRepository.findAll();
+
     }
 
     public UserDTO getUserByEmail(String email) {

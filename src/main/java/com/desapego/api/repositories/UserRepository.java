@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -54,5 +55,13 @@ public class UserRepository {
     public String deleteUser(Long id) {
         boolean removed =  users.removeIf(user -> user.getId().equals(id));
         return removed ? "Usuário com id "+id+" deletado" : "Não foram encontrados registros";
+    }
+
+    public boolean findByEmail(String email){
+        Optional<UserDTO> hasEmailAlreadyInUse =
+                Optional.ofNullable(users.stream().filter(user -> user.getEmail().equals(email)).findFirst().orElse(null));
+        return hasEmailAlreadyInUse.isEmpty();
+
+
     }
 }

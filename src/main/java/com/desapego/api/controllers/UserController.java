@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -18,8 +19,11 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO){
-        UserDTO createdUser = userService.createUser(userDTO);
-        return ResponseEntity.accepted().body(createdUser);
+        Optional<UserDTO> createdUser = userService.createUser(userDTO);
+        if(createdUser.isEmpty()){
+            return ResponseEntity.ofNullable(createdUser.get());
+        }
+        return ResponseEntity.accepted().body(createdUser.get());
     }
     @GetMapping("/fetch")
     public ResponseEntity<ArrayList<UserDTO>> getUsers(){
